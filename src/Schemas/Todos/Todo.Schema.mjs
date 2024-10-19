@@ -18,10 +18,21 @@ export const todoType = gql`
   }
 `;
 
+export const BookList = gql`
+  type Books {
+    title: String!
+    author: String!
+    description: String!
+    publishedYear: Int!
+    active: Boolean!
+  }
+`;
+
 export const queryType = gql`
   type Query {
     getTodos: [Todo]
     getAllUsers: [User]
     getUser(id: ID!): User
+     getBooks(title: String, author: String, description: String): [Books]
   }
 `;

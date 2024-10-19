@@ -22,21 +22,23 @@ const bookListCreation = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { data: response }, "Data Crated Successfully"));
 });
 
-const getfilteredBooks = asyncHandler(async (req, res) => {
-  const { title, author, description } = req.query;
+const getfilteredBooks = async (title, author, description) => {
   let response;
+
   response = await BooklistModel.find({
-    $or: [{ title }, { author }, { description }],
+    $or: [
+      { title: title ? title : "" },
+      { author: author ? author : "" },
+      { description: description ? description : "" },
+    ],
   });
-  console.log("response ", response);
 
   if (response.length <= 0) {
     response = await BooklistModel.find({});
   }
-  res
-    .status(200)
-    .json(new ApiResponse(200, { data: response }, "Data Found Successfully"));
-});
+
+  return response;
+};
 
 const getDataById = asyncHandler(async (req, res) => {
   const { _id } = req.query;
