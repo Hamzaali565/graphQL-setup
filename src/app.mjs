@@ -11,14 +11,17 @@ import {
   todoType,
   userType,
 } from "./Schemas/Todos/Todo.Schema.mjs";
-import { getfilteredBooks } from "./Controllers/Booklist.Controller/Booklist.Controller.mjs";
+import {
+  getDataById,
+  getfilteredBooks,
+} from "./Controllers/Booklist.Controller/Booklist.Controller.mjs";
 const app = express();
 
 app.use(express.json());
 
 const typeDefs = [userType, todoType, BookList, queryType];
 
-const server = new ApolloServer({
+export const server = new ApolloServer({
   typeDefs,
   resolvers: {
     Todo: {
@@ -33,6 +36,7 @@ const server = new ApolloServer({
       getTodos: () => Todo,
       getBooks: (parent, { title, author, description }) =>
         getfilteredBooks(title, author, description),
+      getBookBy_id: async (parent, { _id }) => await getDataById(_id),
       getAllUsers: async () =>
         (await axios.get("https://jsonplaceholder.typicode.com/users")).data,
       getUser: async (parent, { id }) =>
@@ -44,7 +48,6 @@ const server = new ApolloServer({
 
 app.use(cors());
 await server.start();
-
 app.use("/graphql", expressMiddleware(server));
 
 app.use("/api/v1", booklistRouter);

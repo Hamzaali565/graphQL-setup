@@ -25,6 +25,7 @@ export const BookList = gql`
     description: String!
     publishedYear: Int!
     active: Boolean!
+    _id: String
   }
 `;
 
@@ -33,6 +34,7 @@ export const queryType = gql`
     getTodos: [Todo]
     getAllUsers: [User]
     getUser(id: ID!): User
-     getBooks(title: String, author: String, description: String): [Books]
+    getBooks(title: String, author: String, description: String): [Books]
+    getBookBy_id(_id: String): Books
   }
 `;

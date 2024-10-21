@@ -40,17 +40,19 @@ const getfilteredBooks = async (title, author, description) => {
   return response;
 };
 
-const getDataById = asyncHandler(async (req, res) => {
-  const { _id } = req.query;
-  if (!_id) throw new ApiError(400, "_id is required!!!");
-  const response = await BooklistModel.findById(_id);
-  if (!response) {
-    throw new ApiError(404, "Data Not Found!!!");
+const getDataById = async (_id) => {
+  try {
+    const response = await BooklistModel.findById(_id);
+    console.log("response", response);
+
+    if (!response) {
+      throw new ApiError(404, `DATA NOT FOUND AGAINST THIS _id ${_id}`); // Custom error with status code
+    }
+    return response;
+  } catch (error) {
+    throw new ApiError(404, "Serversss Error"); // Default to server error
   }
-  res
-    .status(200)
-    .json(new ApiResponse(200, { data: response }, "Data Found Successfully"));
-});
+};
 
 const updateDocumnet = asyncHandler(async (req, res) => {
   const { title, author, description, publishedYear, active, _id } = req.body;
