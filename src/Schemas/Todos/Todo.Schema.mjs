@@ -38,6 +38,18 @@ const BookCreation = gql`
     description: String!
     publishedYear: Int!
     active: Boolean
+    _id: String
+  }
+`;
+
+const BookUpdation = gql`
+  input UpdateBookInput {
+    title: String
+    author: String
+    description: String
+    publishedYear: Int
+    active: Boolean
+    _id: String!
   }
 `;
 
@@ -51,7 +63,15 @@ export const queryType = gql`
   }
   type Mutation {
     createBook(input: CreateBookInput): Books
+    updateBook(input: UpdateBookInput): Books
   }
 `;
 
-export const typeDefs = [userType, todoType, BookList, BookCreation, queryType];
+export const typeDefs = [
+  userType,
+  todoType,
+  BookList,
+  BookCreation,
+  BookUpdation,
+  queryType,
+];

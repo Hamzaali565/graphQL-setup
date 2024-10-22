@@ -58,35 +58,35 @@ const getDataById = async (_id) => {
   }
 };
 
-const updateDocumnet = asyncHandler(async (req, res) => {
-  const { title, author, description, publishedYear, active, _id } = req.body;
-  console.log(req.body);
+const updateDocumnet = async (input) => {
+  try {
+    const { title, author, description, publishedYear, active, _id } = input;
+    console.log(title, author, description, publishedYear, active, _id);
 
-  if (!_id) throw new ApiError(400, "_id Parameter is Required!!!");
-  const oldData = await BooklistModel.findById(_id);
-  console.log(oldData);
+    if (!_id) throw new Error("_id Parameter is Required!!!");
+    const oldData = await BooklistModel.findById(_id);
+    console.log(oldData);
 
-  if (!oldData) throw new ApiError(404, "Data Not Found!!!");
-  const response = await BooklistModel.findOneAndUpdate(
-    { _id },
-    {
-      $set: {
-        title: title || oldData?.title,
-        author: (author && author) || oldData?.author,
-        active: active !== undefined ? active : oldData?.active,
-        description: (description && description) || oldData?.description,
-        publishedYear:
-          (publishedYear && publishedYear) || oldData?.publishedYear,
+    if (!oldData) throw new Error("Data Not Found!!!");
+    const response = await BooklistModel.findOneAndUpdate(
+      { _id },
+      {
+        $set: {
+          title: title || oldData?.title,
+          author: (author && author) || oldData?.author,
+          active: active !== undefined ? active : oldData?.active,
+          description: (description && description) || oldData?.description,
+          publishedYear:
+            (publishedYear && publishedYear) || oldData?.publishedYear,
+        },
       },
-    },
-    { new: true }
-  );
-  res
-    .status(202)
-    .json(
-      new ApiResponse(202, { data: response }, "data Updated Successfully")
+      { new: true }
     );
-});
+    return response;
+  } catch (error) {
+    throw new Error({ message: error.message });
+  }
+};
 
 const DeleteADoc = asyncHandler(async (req, res) => {
   const { _id } = req.query;

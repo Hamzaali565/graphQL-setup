@@ -3,8 +3,10 @@ import {
   bookListCreation,
   getDataById,
   getfilteredBooks,
+  updateDocumnet,
 } from "../../Controllers/Booklist.Controller/Booklist.Controller.mjs";
 import { Todo } from "../../Constants/Todo.mjs";
+import { ApiError } from "../../utils/ApiError.mjs";
 
 export const todoResolvers = {
   Todo: {
@@ -47,5 +49,10 @@ export const creationQuery = {
   Query: {},
   Mutation: {
     createBook: async (parent, { input }) => bookListCreation(input),
+    updateBook: async (parent, { input }) => {
+      if (![input?._id, input?.author].every(Boolean))
+        throw new ApiError(404, "Missing dataaaa");
+      return await getDataById(input);
+    },
   },
 };
