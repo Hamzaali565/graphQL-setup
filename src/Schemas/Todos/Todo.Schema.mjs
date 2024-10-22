@@ -64,6 +64,7 @@ export const queryType = gql`
   type Mutation {
     createBook(input: CreateBookInput): Books
     updateBook(input: UpdateBookInput): Books
+    deleteBook(input: UpdateBookInput): Books
   }
 `;
 

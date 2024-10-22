@@ -24,6 +24,8 @@ const bookListCreation = async (input) => {
 };
 
 const getfilteredBooks = async (title, author, description) => {
+  console.log(title, author, description);
+
   let response;
 
   response = await BooklistModel.find({
@@ -63,7 +65,6 @@ const updateDocumnet = async (input) => {
     const { title, author, description, publishedYear, active, _id } = input;
     console.log(title, author, description, publishedYear, active, _id);
 
-    if (!_id) throw new Error("_id Parameter is Required!!!");
     const oldData = await BooklistModel.findById(_id);
     console.log(oldData);
 
@@ -88,17 +89,16 @@ const updateDocumnet = async (input) => {
   }
 };
 
-const DeleteADoc = asyncHandler(async (req, res) => {
-  const { _id } = req.query;
-  if (!_id) throw new ApiError(400, "_id Parameter is Required!!!");
-  const response = await BooklistModel.findByIdAndDelete(_id);
-  if (!response) throw new ApiError(404, "Data Not Found!!!");
-  res
-    .status(200)
-    .json(
-      new ApiResponse(200, { data: response }, "Data Deleted Successfully!!!")
-    );
-});
+const DeleteADoc = async (input) => {
+  try {
+    const { _id } = input;
+    const response = await BooklistModel.findByIdAndDelete(_id);
+    if (!response) throw new Error("Data Not Found!!!");
+    return response;
+  } catch (error) {
+    throw new Error({ message: error.message });
+  }
+};
 
 const limitedData = asyncHandler(async (req, res) => {
   const { skippedAmount } = req.query;

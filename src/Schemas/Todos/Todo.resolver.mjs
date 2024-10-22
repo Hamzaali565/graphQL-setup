@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   bookListCreation,
+  DeleteADoc,
   getDataById,
   getfilteredBooks,
   updateDocumnet,
@@ -39,20 +40,26 @@ export const userResolvers = {
 export const queryResolvers = {
   Query: {
     getTodos: () => Todo,
-    getBooks: (parent, { title, author, description }) =>
-      getfilteredBooks(title, author, description),
+    getBooks: async (parent, { title, author, description }) =>
+      await getfilteredBooks(title, author, description),
     getBookBy_id: async (parent, { _id }) => await getDataById(_id),
   },
 };
 
 export const creationQuery = {
-  Query: {},
   Mutation: {
     createBook: async (parent, { input }) => bookListCreation(input),
-    updateBook: async (parent, { input }) => {
-      if (![input?._id, input?.author].every(Boolean))
+    updateBook: async (_, { input }) => {
+      if (![input?._id].every(Boolean))
         throw new ApiError(404, "Missing dataaaa");
-      return await getDataById(input);
+      return await updateDocumnet(input);
+    },
+    deleteBook: async (_, { input }) => {
+      console.log(input?._id);
+
+      if (![input?._id].every(Boolean))
+        throw new ApiError(404, "Missing dataaaa");
+      return await DeleteADoc(input);
     },
   },
 };
