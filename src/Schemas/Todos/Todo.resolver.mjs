@@ -20,22 +20,19 @@ export const todoResolvers = {
   },
 };
 
-export const userResolvers = {
-  Query: {
-    getAllUsers: async () => {
-      const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/users"
-      );
-      return response.data;
-    },
-    getUser: async (parent, { id }) => {
-      const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/users/${id}`
-      );
-      return response.data;
-    },
-  },
-};
+// export const userResolvers = {
+//   Query: {
+//     getAllUsers: async () =>
+//       (await axios.get("https://jsonplaceholder.typicode.com/users")).data,
+
+//     getUser: async (parent, { id }) => {
+//       const response = await axios.get(
+//         `https://jsonplaceholder.typicode.com/users/${id}`
+//       );
+//       return response.data;
+//     },
+//   },
+// };
 
 export const queryResolvers = {
   Query: {
@@ -48,7 +45,7 @@ export const queryResolvers = {
 
 export const creationQuery = {
   Mutation: {
-    createBook: async (parent, { input }) => bookListCreation(input),
+    createBook: async (_, { input }) => bookListCreation(input),
     updateBook: async (_, { input }) => {
       if (![input?._id].every(Boolean))
         throw new ApiError(404, "Missing dataaaa");
