@@ -29,6 +29,18 @@ export const BookList = gql`
   }
 `;
 
+// book creation k liye ye schema define kiya hai "!" ka matlab hai jo parameters laazmi hai..
+
+const BookCreation = gql`
+  input CreateBookInput {
+    title: String!
+    author: String!
+    description: String!
+    publishedYear: Int!
+    active: Boolean
+  }
+`;
+
 export const queryType = gql`
   type Query {
     getTodos: [Todo]
@@ -37,4 +49,9 @@ export const queryType = gql`
     getBooks(title: String, author: String, description: String): [Books]
     getBookBy_id(_id: String): Books
   }
+  type Mutation {
+    createBook(input: CreateBookInput): Books
+  }
 `;
+
+export const typeDefs = [userType, todoType, BookList, BookCreation, queryType];

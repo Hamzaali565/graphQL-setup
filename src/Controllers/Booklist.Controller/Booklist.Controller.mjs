@@ -3,24 +3,25 @@ import { ApiError } from "../../utils/ApiError.mjs";
 import { ApiResponse } from "../../utils/ApiResponse.mjs";
 import { asyncHandler } from "../../utils/AsyncHandler.mjs";
 
-const bookListCreation = asyncHandler(async (req, res) => {
-  console.log("req.body", req.body);
-  const { title, author, description, publishedYear, active } = req.body;
-  if (![title, author, description].every(Boolean))
-    throw new ApiError(400, "All Parameters are required !!!");
-  const response = await BooklistModel.create({
-    title,
-    author,
-    description,
-    publishedYear,
-    active,
-  });
-  if (!response)
-    throw new ApiError(500, "Internal Server Error please try later");
-  res
-    .status(200)
-    .json(new ApiResponse(200, { data: response }, "Data Crated Successfully"));
-});
+const bookListCreation = async (input) => {
+  try {
+    const { title, author, description, publishedYear, active } = input;
+    console.log({ title, author, description, publishedYear, active });
+    if (![title, author, description].every(Boolean))
+      throw new Error("All Parameters are required !!!");
+
+    const response = await BooklistModel.create({
+      title,
+      author,
+      description,
+      publishedYear,
+      active,
+    });
+    return response;
+  } catch (error) {
+    throw new Error({ message: error.message });
+  }
+};
 
 const getfilteredBooks = async (title, author, description) => {
   let response;
@@ -46,11 +47,14 @@ const getDataById = async (_id) => {
     console.log("response", response);
 
     if (!response) {
-      throw new ApiError(404, `DATA NOT FOUND AGAINST THIS _id ${_id}`); // Custom error with status code
+      throw new ApiError(404, `DATA NOT FOUND AGAINST THIS _id ${_id}`);
     }
     return response;
   } catch (error) {
-    throw new ApiError(404, "Serversss Error"); // Default to server error
+    if (error instanceof ApiError) {
+      throw error; // Re-throw ApiError if it's a known error
+    }
+    throw new ApiError(505, "Server Errosr");
   }
 };
 
