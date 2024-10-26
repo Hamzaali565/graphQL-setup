@@ -61,6 +61,7 @@ export const queryType = gql`
     getBooks(title: String, author: String, description: String): [Books]
     getBookBy_id(_id: String): Books
   }
+
   type Mutation {
     createBook(input: CreateBookInput): Books
     updateBook(input: UpdateBookInput): Books

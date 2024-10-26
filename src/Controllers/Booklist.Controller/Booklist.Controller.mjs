@@ -24,23 +24,28 @@ const bookListCreation = async (input) => {
 };
 
 const getfilteredBooks = async (title, author, description) => {
-  console.log(title, author, description);
+  try {
+    console.log(title, author, description);
 
-  let response;
+    let response;
 
-  response = await BooklistModel.find({
-    $or: [
-      { title: title ? title : "" },
-      { author: author ? author : "" },
-      { description: description ? description : "" },
-    ],
-  });
+    response = await BooklistModel.find({
+      $or: [
+        { title: title ? title : "" },
+        { author: author ? author : "" },
+        { description: description ? description : "" },
+      ],
+    });
 
-  if (response.length <= 0) {
-    response = await BooklistModel.find({});
+    if (response.length <= 0) {
+      response = await BooklistModel.find({});
+    }
+    console.log("response ", response);
+
+    return response;
+  } catch (error) {
+    throw new Error("DATA NOT FOUND !!!");
   }
-
-  return response;
 };
 
 const getDataById = async (_id) => {
